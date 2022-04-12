@@ -6,25 +6,28 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import(/* webpackChunkName: "about" */ '../App.vue')
+    name: 'main',
+    component: () => import(/* webpackChunkName: "main" */ '../views/Main.vue')
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+    meta: { ignoreAuth: true }
   },
-  {
-    path: '/main',
-    name: 'main',
-    component: () => import(/* webpackChunkName: "main" */ '../views/Main.vue')
-  }
 ]
 
 const router = new VueRouter({
   // mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta.ignoreAuth && !localStorage.token) {
+    return next('/login')
+  }
+  next()
 })
 
 export default router

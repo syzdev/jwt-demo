@@ -1,11 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form
-      label-width="80px"
-      :model="loginUserInfo"
-      size="small"
-      @submit.native.prevent="login"
-    >
+    <el-form label-width="80px" :model="loginUserInfo" size="small">
       <el-form-item label="用户名">
         <el-input v-model="loginUserInfo.username"></el-input>
       </el-form-item>
@@ -13,7 +8,7 @@
         <el-input v-model="loginUserInfo.password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" native-type="submit">提交</el-button>
+        <el-button type="primary" @click="login">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -32,7 +27,8 @@ export default {
   methods: {
     async login() {
       const res = await http.post('login', this.loginUserInfo)
-      console.log(res)
+      localStorage.token = res.data.token
+      this.$router.push('/')
     },
   },
 }
